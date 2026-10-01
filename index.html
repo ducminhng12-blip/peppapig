@@ -30,6 +30,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
+		#gop-y-section {
+			background: #fff0f5;
+			padding: 40px 20px;
+			border-radius: 20px;
+			margin: 40px auto;
+			max-width: 800px;
+			box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+		}
+		.feedback-form { display: flex; gap: 10px; margin-bottom: 30px; }
+		.feedback-input { flex: 1; padding: 15px; border: 2px solid #ffb6c1; border-radius: 10px; font-size: 16px; outline: none; }
+		.feedback-btn { background: #ff69b4; color: white; border: none; padding: 0 25px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+		.feedback-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+		.vote-btn { background: #e0f7fa; border: 1px solid #26c6da; color: #0097a7; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
+		.vote-btn.voted {
+			background: #e8f5e9 !important;
+			border-color: #81c784 !important;
+			color: #2e7d32 !important;
+			cursor: not-allowed !important;
+			box-shadow: none !important;
+		}
+		.vote-btn.loading { opacity: 0.5; pointer-events: none; }
+		.feedback-text { flex: 1; margin-left: 20px; font-size: 16px; color: #333; }
+		
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
@@ -114,6 +137,7 @@
                     <a href="#pricing" class="text-gray-600 hover:text-peppa-pink font-medium transition-colors">Bảng giá</a>
                     <a href="#reviews" class="text-gray-600 hover:text-peppa-pink font-medium transition-colors">Nhận xét</a>
                     <a href="#donate" class="text-gray-600 hover:text-peppa-blue font-medium transition-colors">Ủng hộ</a>
+					<a href="#gop-y-section" class=""text-align: center; color: #d81b60;">Góp ý</a>
                 </div>
                 <!-- Nút tải xuống (Navbar) -->
                 <div class="hidden md:flex">
@@ -289,6 +313,20 @@
             </p>
         </div>
     </section>
+	
+	<section id="gop-y-section">
+		<h2 style="text-align: center; color: #d81b60;">💡 Mong Muốn Của Bạn</h2>
+		<p style="text-align: center; color: #666; margin-bottom: 20px;">Bạn muốn phần mềm có thêm tính năng gì? Hãy góp ý hoặc bình chọn cho các tính năng bên dưới!</p>
+		
+		<div class="feedback-form">
+			<input type="text" id="gopYInput" class="feedback-input" placeholder="Ví dụ: Thêm chức năng xuất báo cáo ra file Excel..." />
+			<button onclick="guiGopY()" class="feedback-btn" id="btnGui">Gửi Góp Ý</button>
+		</div>
+
+		<div id="danhSachGopY">
+			<p style="text-align: center;">Đang tải dữ liệu...</p>
+		</div>
+	</section>
 
     <footer class="bg-white border-t border-gray-200 py-12">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
@@ -374,9 +412,142 @@
             modalContent.classList.add('scale-95');
             
             setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300(0)); // Đợi hết animation mới ẩn hoàn toàn
+				modal.classList.add('hidden');
+			}, 300);
         }
     </script>
+	
+	<script>
+		// Link Web App của bạn
+		const API_URL = "https://script.google.com/macros/s/AKfycbx3rbRtF5BiiYOSHo_hGD_7mFmAS9jBNnF3CWVIi82aBda84c7jfWBLp283T-KMFgaR/exec";
+
+		// 1. Tạo hoặc lấy mã thiết bị duy nhất cho máy này
+		function getDeviceId() {
+			let deviceId = localStorage.getItem('peppa_device_id');
+			if (!deviceId) {
+				deviceId = 'dev_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
+				localStorage.setItem('peppa_device_id', deviceId);
+			}
+			return deviceId;
+		}
+
+		// 2. Lấy danh sách ID các tính năng máy này đã vote
+		function getVotedList() {
+			try {
+				return JSON.parse(localStorage.getItem('peppa_voted_feedbacks')) || [];
+			} catch (e) {
+				return [];
+			}
+		}
+
+		// 3. Lưu ID tính năng vừa vote vào máy
+		function markAsVoted(id) {
+			const list = getVotedList();
+			if (!list.includes(id.toString())) {
+				list.push(id.toString());
+				localStorage.setItem('peppa_voted_feedbacks', JSON.stringify(list));
+			}
+		}
+
+		// 4. Lấy danh sách góp ý và hiển thị
+		async function taiDanhSachGopY() {
+			const container = document.getElementById('danhSachGopY');
+			try {
+				const response = await fetch(API_URL);
+				const data = await response.json();
+				
+				if (data.status === 'error') {
+					container.innerHTML = `<p style="text-align:center;color:red;">Lỗi Sheet: ${data.message}</p>`;
+					return;
+				}
+
+				if (!Array.isArray(data) || data.length === 0) {
+					container.innerHTML = '<p style="text-align: center; color:#999;">Chưa có góp ý nào. Hãy là người đầu tiên!</p>';
+					return;
+				}
+				
+				// Sắp xếp dữ liệu theo lượt vote giảm dần
+				data.sort((a, b) => b.votes - a.votes);
+				container.innerHTML = ''; 
+
+				const votedList = getVotedList();
+
+				data.forEach(item => {
+					const isVoted = votedList.includes(item.id.toString());
+					const btnClass = isVoted ? "vote-btn voted" : "vote-btn";
+					const btnTitle = isVoted ? "Bạn đã bình chọn cho tính năng này" : "Bình chọn";
+					const icon = isVoted ? "✓" : "▲";
+
+					container.innerHTML += `
+						<div class="feedback-item">
+							<button class="${btnClass}" title="${btnTitle}" onclick="upvote('${item.id}', this)" ${isVoted ? 'disabled' : ''}>
+								<span>${icon}</span>
+								<span class="vote-count">${item.votes}</span>
+							</button>
+							<div class="feedback-text">${item.content}</div>
+						</div>
+					`;
+				});
+			} catch (error) {
+				console.error("Lỗi:", error);
+				container.innerHTML = '<p style="text-align:center;color:red;">Lỗi kết nối. Vui lòng thử lại sau.</p>';
+			}
+		}
+
+		// 5. Gửi góp ý mới
+		async function guiGopY() {
+			const input = document.getElementById('gopYInput');
+			const btn = document.getElementById('btnGui');
+			const noiDung = input.value.trim();
+			
+			if (!noiDung) { alert("Vui lòng nhập nội dung góp ý!"); return; }
+			
+			btn.innerText = "Đang gửi...";
+			btn.disabled = true;
+
+			try {
+				await fetch(`${API_URL}?action=add&content=${encodeURIComponent(noiDung)}`);
+				input.value = '';
+				await taiDanhSachGopY();
+			} catch (e) {
+				alert("Gửi thất bại! Vui lòng thử lại.");
+			} finally {
+				btn.innerText = "Gửi Góp Ý";
+				btn.disabled = false;
+			}
+		}
+
+		// 6. Xử lý khi nhấn nút Vote
+		async function upvote(id, btnElement) {
+			const votedList = getVotedList();
+			if (votedList.includes(id.toString())) {
+				alert("Bạn đã bình chọn cho tính năng này rồi!");
+				return;
+			}
+
+			btnElement.classList.add('loading');
+			const deviceId = getDeviceId();
+
+			try {
+				const res = await fetch(`${API_URL}?action=upvote&id=${id}&deviceId=${encodeURIComponent(deviceId)}`);
+				const resData = await res.json();
+
+				if (resData.status === 'already_voted') {
+					alert("Máy này đã bình chọn cho mục này rồi!");
+				}
+				
+				// Ghi nhận máy này đã vote
+				markAsVoted(id);
+				await taiDanhSachGopY();
+			} catch (e) {
+				console.error("Upvote thất bại:", e);
+			} finally {
+				btnElement.classList.remove('loading');
+			}
+		}
+
+		// Tự động tải dữ liệu khi trang mở xong
+		window.addEventListener('DOMContentLoaded', taiDanhSachGopY);
+	</script>
 </body>
 </html>
