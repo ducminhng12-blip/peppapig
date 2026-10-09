@@ -1,0 +1,6 @@
+{
+  "name": "Net Tycoon Unity C# - Tương Tác Bàn Máy Tính",
+  "description": "Trọn bộ C# scripts và hướng dẫn Unity chi tiết cho game Net Tycoon góc nhìn thứ nhất (PC & Mobile) kèm trình mô phỏng 3D tương tác.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
