@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peqqa – Phần mềm hóa đơn điện tử & thuế cho kế toán dịch vụ</title>
+<meta name="description" content="Peqqa giúp kế toán dịch vụ tải hóa đơn XML/PDF hàng loạt, tra cứu MST hàng loạt, tải tờ khai và giấy nộp tiền. Không giới hạn MST, trả phí một lần cho mọi chức năng.">
+<meta property="og:title" content="Peqqa – Tôi tài giỏi, bạn cũng tạm">
+<meta property="og:description" content="Tải hóa đơn, tra cứu MST, tờ khai và giấy nộp tiền hàng loạt. Không giới hạn MST.">
+<meta property="og:image" content="assets/tai-hoa-don.png">
+<link rel="icon" href="assets/favicon.png">
+<style>
+:root{
+  --pink:#e8739f; --pink-soft:#fdeef4; --pink-deep:#c94f80;
+  --blue:#2f5bea; --blue-deep:#2447c4;
+  --ink:#1f2433; --muted:#5d6577; --line:#e7e9f0; --bg:#ffffff; --bg-alt:#f7f8fc; --ok:#1f9d63;
+  --radius:16px; --shadow:0 8px 30px rgba(31,36,51,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --ink:#eef0f6; --muted:#a6adbf; --line:#2b3145; --bg:#12141c; --bg-alt:#181b26; --pink-soft:#2a1d25; --shadow:0 8px 30px rgba(0,0,0,.4); }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;font-size:17px}
+img{max-width:100%;display:block}
+a{color:var(--blue)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+section{padding:72px 0}
+section.alt{background:var(--bg-alt)}
+h1,h2,h3{line-height:1.25;margin:0 0 .5em}
+h2{font-size:clamp(1.6rem,3.2vw,2.2rem);text-align:center}
+.sub{text-align:center;color:var(--muted);max-width:680px;margin:0 auto 40px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:999px;font-weight:700;text-decoration:none;border:2px solid transparent;font-size:1rem;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-deep)}
+.btn-ghost{border-color:var(--pink);color:var(--pink-deep);background:transparent}
+.btn-zalo{background:#0068ff;color:#fff}
+
+/* header */
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.25rem;color:var(--ink);text-decoration:none}
+.brand img{width:38px;height:38px;border-radius:10px}
+.nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0}
+.nav ul a{color:var(--muted);text-decoration:none;font-weight:600;font-size:.95rem}
+.nav ul a:hover{color:var(--pink-deep)}
+@media(max-width:820px){.nav ul{display:none}}
+
+/* hero */
+.hero{padding:70px 0 60px;background:linear-gradient(180deg,var(--pink-soft),var(--bg))}
+.hero .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.tag{display:inline-block;background:var(--pink-soft);color:var(--pink-deep);padding:6px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid color-mix(in srgb,var(--pink) 40%,transparent)}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);margin:16px 0 12px}
+.hero h1 span{color:var(--pink-deep)}
+.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:540px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0 14px}
+.note{font-size:.88rem;color:var(--muted)}
+.hero-shot img{aspect-ratio:16/11;object-fit:cover;object-position:top left;width:100%;height:auto}
+.hero-shot{border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;background:#fff}
+@media(max-width:860px){.hero .grid{grid-template-columns:1fr}.hero{padding-top:40px}}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.card .ic{font-size:1.8rem;margin-bottom:8px}
+.card h3{font-size:1.1rem}
+.card p{margin:0;color:var(--muted);font-size:.97rem}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.cards.c3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cards.c3{grid-template-columns:1fr}}
+.pain .card{border-left:4px solid var(--pink)}
+
+/* shots */
+.shots{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+@media(max-width:760px){.shots{grid-template-columns:1fr}}
+.shot{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);cursor:zoom-in}
+.shot img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;object-position:top left}
+.shot figcaption{padding:12px 16px;font-weight:600;font-size:.95rem}
+.privacy-note{text-align:center;color:var(--muted);font-size:.88rem;margin-top:18px}
+#lightbox{position:fixed;inset:0;background:rgba(10,12,20,.88);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;cursor:zoom-out}
+#lightbox.on{display:flex}
+#lightbox img{max-height:92vh;border-radius:10px;background:#fff}
+
+/* why */
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;text-align:center}
+.why .card{padding:30px 22px}
+.big{font-size:2.2rem;font-weight:800;color:var(--pink-deep);line-height:1.1;margin-bottom:6px}
+
+/* pricing */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;align-items:stretch}
+.plan{position:relative;background:var(--bg);border:2px solid var(--line);border-radius:var(--radius);padding:28px 22px;text-align:center;display:flex;flex-direction:column}
+.plan.best{border-color:var(--pink);box-shadow:var(--shadow)}
+.plan .badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--pink);color:#fff;font-size:.78rem;font-weight:800;padding:4px 14px;border-radius:999px;white-space:nowrap}
+.plan h3{font-size:1.1rem;color:var(--muted)}
+.price{font-size:2.3rem;font-weight:800;margin:6px 0}
+.price small{font-size:1rem;font-weight:600;color:var(--muted)}
+.dur{font-weight:700}
+.bonus{color:var(--ok);font-weight:700;min-height:1.6em}
+.per{color:var(--muted);font-size:.9rem;margin:6px 0 18px;flex:1}
+.addon{max-width:640px;margin:26px auto 0;text-align:center;background:var(--pink-soft);border-radius:var(--radius);padding:16px 20px}
+.included{max-width:760px;margin:30px auto 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 20px}
+.included li::before{content:"✔ ";color:var(--ok);font-weight:800}
+
+/* steps */
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;padding:0;list-style:none}
+.steps li{counter-increment:s;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px 22px;position:relative}
+.steps li::before{content:counter(s);position:absolute;top:-16px;left:20px;width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;display:grid;place-items:center}
+.steps h3{font-size:1.05rem;margin-top:6px}
+.steps p{margin:0;color:var(--muted);font-size:.96rem}
+.dl-box{text-align:center;margin-top:40px}
+.req{color:var(--muted);font-size:.92rem;margin-top:10px}
+
+/* faq */
+.faq{max-width:820px;margin:0 auto}
+details{background:var(--bg);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;padding:0 20px}
+summary{cursor:pointer;font-weight:700;padding:16px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.4rem;color:var(--pink-deep);line-height:1}
+details[open] summary::after{content:"–"}
+details p,details ul{margin:0 0 16px;color:var(--muted)}
+details ul{padding-left:20px}
+
+/* contact */
+.contact{text-align:center}
+.contact .cta{justify-content:center}
+.pay{display:grid;grid-template-columns:1fr;gap:14px;max-width:640px;margin:0 auto 36px;text-align:left}
+.pay ol{margin:0;padding-left:22px;color:var(--muted)}
+.qr{display:none;margin:18px auto 0;max-width:240px;border-radius:12px;border:1px solid var(--line)}
+
+footer{background:#161927;color:#b9bfd1;padding:36px 0;font-size:.9rem}
+footer a{color:#e8a5c0}
+footer .disc{max-width:820px;margin:0 auto 16px;text-align:center}
+footer .copy{text-align:center;opacity:.8}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><img src="assets/logo.png" alt="Logo Peqqa"> Peqqa</a>
+    <ul>
+      <li><a href="#tinh-nang">Tính năng</a></li>
+      <li><a href="#hinh-anh">Hình ảnh</a></li>
+      <li><a href="#bang-gia">Bảng giá</a></li>
+      <li><a href="#tai-ve">Tải về</a></li>
+      <li><a href="#hoi-dap">Hỏi đáp</a></li>
+      <li><a href="#lien-he">Liên hệ</a></li>
+    </ul>
+    <a class="btn btn-primary" style="padding:9px 18px" href="#tai-ve">Tải về</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap grid">
+    <div>
+      <span class="tag">Dành cho kế toán dịch vụ</span>
+      <h1>Tôi tài giỏi, <span>bạn cũng tạm</span></h1>
+      <p class="lead"><strong>Peqqa</strong> giúp bạn tải hóa đơn XML/PDF, tra cứu mã số thuế, tờ khai và giấy nộp tiền <strong>hàng loạt</strong> thay vì làm từng cái một. Không giới hạn số MST, trả phí một lần cho mọi chức năng.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#tai-ve">⬇ Tải về dùng thử</a>
+        <a class="btn btn-ghost" href="#bang-gia">Xem bảng giá</a>
+      </div>
+      <p class="note">Chạy trên Windows 7 trở lên · Mật khẩu của bạn chỉ nằm trên máy của bạn</p>
+    </div>
+    <div class="hero-shot"><img src="assets/tai-hoa-don.png" alt="Màn hình Tải hóa đơn của Peqqa" width="1658" height="1018"></div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="wrap">
+    <h2>Làm tay từng cái – tốn thời gian của bạn</h2>
+    <p class="sub">Cuối kỳ khai thuế, việc lặp đi lặp lại nuốt hết thời gian đáng lẽ dành cho khách hàng.</p>
+    <div class="cards">
+      <div class="card"><div class="ic">🧾</div><h3>Tải từng hóa đơn</h3><p>Mỗi hóa đơn một lần bấm, nhân với hàng trăm hóa đơn và hàng chục công ty.</p></div>
+      <div class="card"><div class="ic">🔎</div><h3>Tra cứu từng MST</h3><p>Kiểm tra từng đối tác một, nhập tay, chép tay, dễ nhầm.</p></div>
+      <div class="card"><div class="ic">📄</div><h3>Tìm hóa đơn gốc PDF</h3><p>Mỗi nhà cung cấp một trang tra cứu khác nhau, mất công tìm và tải.</p></div>
+      <div class="card"><div class="ic">🏛️</div><h3>Tờ khai, giấy nộp tiền</h3><p>Vào dịch vụ công tra cứu từng tờ khai, từng giấy nộp tiền cho từng công ty.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="alt" id="tinh-nang">
+  <div class="wrap">
+    <h2>Peqqa làm thay bạn</h2>
+    <p class="sub">Một phần mềm gọn, tập trung vào đúng những việc kế toán dịch vụ làm mỗi ngày.</p>
+    <div class="cards c3">
+      <div class="card"><div class="ic">⬇️</div><h3>Tải hóa đơn XML/PDF hàng loạt</h3><p>Chọn kỳ, chọn loại hóa đơn (mua vào, bán ra), bấm một lần để tải về. Có bảng đối chiếu trạng thái từng hóa đơn.</p></div>
+      <div class="card"><div class="ic">🔍</div><h3>Tra cứu MST hàng loạt</h3><p>Dán danh sách MST doanh nghiệp hoặc cá nhân, nhận lại tên, địa chỉ, cơ quan thuế, tình trạng hoạt động.</p></div>
+      <div class="card"><div class="ic">📑</div><h3>Tờ khai &amp; giấy nộp tiền</h3><p>Tra cứu và tải tờ khai, giấy nộp tiền, thông báo của cơ quan thuế từ cổng dịch vụ công.</p></div>
+      <div class="card"><div class="ic">📊</div><h3>Xuất Excel</h3><p>Xuất bảng tổng hợp và chi tiết ra Excel để làm sổ sách và đối chiếu.</p></div>
+      <div class="card"><div class="ic">🗂️</div><h3>Quản lý nhiều MST</h3><p>Lưu nhiều tài khoản, theo dõi trạng thái đăng nhập từng MST, đăng nhập đồng loạt khi cần.</p></div>
+      <div class="card"><div class="ic">🧰</div><h3>Phân biệt DN và HKD</h3><p>Hỗ trợ cả doanh nghiệp và hộ kinh doanh, mỗi loại dùng đúng phiên đăng nhập của mình.</p></div>
+    </div>
+    <p class="privacy-note">Tải hóa đơn PDF gốc đang được mở rộng dần theo từng nhà cung cấp hóa đơn. Nếu nhà cung cấp của bạn chưa có, gửi link tra cứu và file XML mẫu qua Zalo để được bổ sung.</p>
+  </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section id="hinh-anh">
+  <div class="wrap">
+    <h2>Giao diện thực tế</h2>
+    <p class="sub">Bấm vào ảnh để phóng to.</p>
+    <div class="shots">
+      <figure class="shot"><img loading="lazy" src="assets/tai-hoa-don.png" alt="Xử lý hóa đơn"><figcaption>Tải &amp; đối chiếu hóa đơn đầu vào/đầu ra</figcaption></figure>
+      <figure class="shot"><img loading="lazy" src="assets/dang-nhap-mst.png" alt="Quản lý tài khoản MST"><figcaption>Quản lý nhiều MST và trạng thái phiên</figcaption></figure>
+      <figure class="shot"><img loading="lazy" src="assets/to-khai-gnt.png" alt="Tờ khai và giấy nộp tiền"><figcaption>Tờ khai, giấy nộp tiền, thông báo cơ quan thuế</figcaption></figure>
+      <figure class="shot"><img loading="lazy" src="assets/tra-cuu-mst.png" alt="Tra cứu MST hàng loạt"><figcaption>Tra cứu MST hàng loạt</figcaption></figure>
+    </div>
+    <p class="privacy-note">Ảnh minh họa đã được làm mờ thông tin MST, tên công ty và mật khẩu.</p>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="alt">
+  <div class="wrap">
+    <h2>Vì sao chọn Peqqa</h2>
+    <div style="height:28px"></div>
+    <div class="why">
+      <div class="card"><div class="big">∞</div><h3>Không giới hạn MST</h3><p>Quản lý bao nhiêu công ty cũng không phải trả thêm.</p></div>
+      <div class="card"><div class="big">1 lần</div><h3>Một mức phí cho mọi chức năng</h3><p>Không chia gói theo tính năng, không phải nâng cấp gói.</p></div>
+      <div class="card"><div class="big">Giá thấp</div><h3>Chi phí dễ chịu</h3><p>Từ 20.000đ cho tháng đầu trải nghiệm.</p></div>
+      <div class="card"><div class="big">🔒</div><h3>Chạy trên máy bạn</h3><p>Phần mềm chạy trên máy khách, không gửi mật khẩu về đâu.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="bang-gia">
+  <div class="wrap">
+    <h2>Bảng giá</h2>
+    <p class="sub">Tất cả gói đều dùng đầy đủ chức năng, không giới hạn MST. Gói càng dài càng tiết kiệm.</p>
+    <div class="plans">
+      <div class="plan">
+        <h3>Trải nghiệm</h3>
+        <div class="dur">1 tháng</div>
+        <div class="price">20.000<small>đ</small></div>
+        <div class="bonus">&nbsp;</div>
+        <div class="per">Dùng thử đầy đủ chức năng</div>
+        <a class="btn btn-ghost" href="#lien-he">Chọn gói</a>
+      </div>
+      <div class="plan">
+        <h3>Tiêu chuẩn</h3>
+        <div class="dur">12 tháng</div>
+        <div class="price">120.000<small>đ</small></div>
+        <div class="bonus">&nbsp;</div>
+        <div class="per">≈ 10.000đ/tháng</div>
+        <a class="btn btn-ghost" href="#lien-he">Chọn gói</a>
+      </div>
+      <div class="plan best">
+        <span class="badge">TIẾT KIỆM</span>
+        <h3>Tiết kiệm</h3>
+        <div class="dur">27 tháng</div>
+        <div class="price">240.000<small>đ</small></div>
+        <div class="bonus">Tặng 3 tháng</div>
+        <div class="per">≈ 8.900đ/tháng</div>
+        <a class="btn btn-primary" href="#lien-he">Chọn gói</a>
+      </div>
+      <div class="plan">
+        <h3>Dài hạn</h3>
+        <div class="dur">42 tháng</div>
+        <div class="price">360.000<small>đ</small></div>
+        <div class="bonus">Tặng 6 tháng</div>
+        <div class="per">≈ 8.600đ/tháng</div>
+        <a class="btn btn-ghost" href="#lien-he">Chọn gói</a>
+      </div>
+    </div>
+    <div class="addon"><strong>Thêm 1 thiết bị: +30.000đ</strong><br><span class="note">Dùng trên nhiều máy (ví dụ máy ở văn phòng và máy ở nhà).</span></div>
+    <ul class="included">
+      <li>Tải hóa đơn XML/PDF hàng loạt</li>
+      <li>Tra cứu MST hàng loạt</li>
+      <li>Tờ khai &amp; giấy nộp tiền</li>
+      <li>Xuất Excel tổng hợp, chi tiết</li>
+      <li>Quản lý không giới hạn MST</li>
+      <li>Hỗ trợ qua nhóm Zalo</li>
+    </ul>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<section class="alt" id="tai-ve">
+  <div class="wrap">
+    <h2>Tải về &amp; cài đặt</h2>
+    <p class="sub">Bốn bước là dùng được.</p>
+    <ol class="steps">
+      <li><h3>Tải phần mềm</h3><p>Bấm nút bên dưới để tải bản mới nhất từ GitHub Releases.</p></li>
+      <li><h3>Giải nén / mở file</h3><p>Nếu tải về là file .zip, giải nén vào một thư mục cố định (không giải nén trong thư mục tạm). Mở file chương trình để chạy.</p></li>
+      <li><h3>Nhập tài khoản</h3><p>Vào tab “Đăng nhập MST”, nhập MST và mật khẩu của các công ty bạn quản lý, chọn loại DN hoặc HKD.</p></li>
+      <li><h3>Kích hoạt</h3><p>Chuyển khoản theo gói bạn chọn, nhắn Zalo kèm ảnh chuyển khoản để được kích hoạt.</p></li>
+    </ol>
+    <div class="dl-box">
+      <a class="btn btn-primary" id="dl-btn" href="https://github.com/ducminhng12-blip/peppapig/releases/latest">⬇ Tải Peqqa (GitHub Releases)</a>
+      <p class="req">Yêu cầu: Windows 7 trở lên · Kết nối Internet</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="hoi-dap">
+  <div class="wrap">
+    <h2>Câu hỏi thường gặp</h2>
+    <div style="height:28px"></div>
+    <div class="faq">
+      <details><summary>Windows hoặc phần mềm diệt virus báo cảnh báo khi mở file thì sao?</summary>
+        <p>Phần mềm nhỏ, phát hành độc lập nên chưa có chữ ký số, vì vậy Windows SmartScreen hoặc phần mềm diệt virus đôi khi hiện cảnh báo “không nhận ra ứng dụng”. Cách xử lý:</p>
+        <ul>
+          <li>Windows SmartScreen: bấm <b>Thông tin thêm (More info)</b> rồi <b>Vẫn chạy (Run anyway)</b>.</li>
+          <li>Phần mềm diệt virus (Windows Defender, v.v.): thêm thư mục chứa Peqqa vào danh sách ngoại lệ (Exclusions) rồi tải/giải nén lại nếu file bị chuyển vào mục cách ly.</li>
+          <li>Chỉ tải phần mềm từ trang GitHub Releases chính thức của Peqqa.</li>
+        </ul>
+      </details>
+      <details><summary>Mật khẩu của tôi có bị gửi đi đâu không?</summary>
+        <p>Phần mềm chạy trên máy của bạn và không gửi mật khẩu về đâu. Thông tin đăng nhập chỉ được dùng để bạn đăng nhập vào các cổng của cơ quan thuế.</p></details>
+      <details><summary>Peqqa có phải phần mềm của cơ quan thuế không?</summary>
+        <p>Không. Peqqa là công cụ hỗ trợ độc lập, giúp thao tác hàng loạt trên các cổng tra cứu công khai và cổng dịch vụ của cơ quan thuế bằng chính tài khoản của bạn. Peqqa không phải sản phẩm của cơ quan thuế và không thay thế các cổng chính thức.</p></details>
+      <details><summary>Có giới hạn số MST không?</summary>
+        <p>Không giới hạn. Một mức phí cho toàn bộ chức năng, không phải nâng gói khi tăng số MST.</p></details>
+      <details><summary>Phân biệt DN và HKD như thế nào?</summary>
+        <p>Trong tab “Đăng nhập MST”, mỗi dòng có cột “Loại” để chọn DN hoặc HKD. Khi sang tab Tờ khai &amp; GNT, chọn MST nào, phần mềm dùng đúng phiên đăng nhập của MST đó và chỉ hiện các loại tra cứu phù hợp.</p></details>
+      <details><summary>Tải hóa đơn PDF gốc có hỗ trợ mọi nhà cung cấp không?</summary>
+        <p>Chưa. Danh sách nhà cung cấp hóa đơn được mở rộng dần. Nếu nhà cung cấp của bạn chưa có, hãy gửi link trang tra cứu và một file XML mẫu qua Zalo để được bổ sung.</p></details>
+      <details><summary>Thanh toán và kích hoạt như thế nào?</summary>
+        <p>Chọn gói, chuyển khoản theo thông tin được cung cấp qua Zalo, nhắn Zalo kèm ảnh chuyển khoản. Bạn sẽ được kích hoạt sau khi xác nhận.</p></details>
+      <details><summary>Hết hạn thì sao? Gia hạn thế nào?</summary>
+        <p>Dữ liệu và tài khoản bạn đã lưu trên máy vẫn còn. Muốn dùng tiếp, chọn gói và thanh toán lại theo cách trên.</p></details>
+      <details><summary>Dùng được trên mấy máy?</summary>
+        <p>Mặc định 1 thiết bị. Muốn dùng thêm máy, thêm 30.000đ cho mỗi thiết bị.</p></details>
+      <details><summary>Phần mềm báo lỗi hoặc không tải được hóa đơn?</summary>
+        <p>Kiểm tra kết nối mạng và thử đăng nhập lại MST đó. Nếu vẫn lỗi, chụp màn hình thông báo (nhớ che thông tin nhạy cảm) và gửi vào nhóm Zalo hỗ trợ để được xử lý.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="alt contact" id="lien-he">
+  <div class="wrap">
+    <h2>Mua &amp; liên hệ hỗ trợ</h2>
+    <p class="sub">Nhắn Zalo để chọn gói, nhận thông tin chuyển khoản và được kích hoạt.</p>
+    <div class="pay card">
+      <strong>Cách mua</strong>
+      <ol>
+        <li>Chọn gói ở mục Bảng giá.</li>
+        <li>Nhắn Zalo <b>0563520805</b> để nhận thông tin chuyển khoản (hoặc mã QR).</li>
+        <li>Chuyển khoản, gửi ảnh xác nhận qua Zalo.</li>
+        <li>Nhận kích hoạt và bắt đầu dùng.</li>
+      </ol>
+      <img class="qr" id="qr" src="assets/qr.png" alt="Mã QR chuyển khoản" onload="this.style.display='block'" onerror="this.remove()">
+    </div>
+    <div class="cta">
+      <a class="btn btn-zalo" href="https://zalo.me/0563520805" target="_blank" rel="noopener">💬 Zalo: 0563 520 805</a>
+      <a class="btn btn-ghost" href="https://zalo.me/g/7cowrxkr8omndvmjao0z" target="_blank" rel="noopener">👥 Vào nhóm hỗ trợ Zalo</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="disc"><strong>Lưu ý:</strong> Peqqa là công cụ hỗ trợ độc lập, không phải sản phẩm của cơ quan thuế. Người dùng chịu trách nhiệm về tài khoản và dữ liệu thuế của mình, và nên đối chiếu kết quả với cổng chính thức khi cần.</p>
+    <p class="copy">© <span id="y"></span> Peqqa · Phát hành bởi Anh kế toán ngoan ngoãn</p>
+  </div>
+</footer>
+
+<div id="lightbox" role="dialog" aria-label="Xem ảnh lớn"><img alt=""></div>
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const lb = document.getElementById('lightbox'), lbi = lb.querySelector('img');
+document.querySelectorAll('.shot img').forEach(i => i.addEventListener('click', () => { lbi.src = i.src; lb.classList.add('on'); }));
+lb.addEventListener('click', () => lb.classList.remove('on'));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('on'); });
+</script>
+</body>
+</html>
