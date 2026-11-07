@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Công cụ miễn phí – Peqqa Soft</title>
+<meta name="description" content="49 công cụ miễn phí cho kế toán, thuế, nhân sự, bán hàng. Dùng ngay trên trình duyệt hoặc tải về máy.">
+<link rel="icon" href="assets/favicon.png">
+<style>
+:root{--pink:#e8739f;--pink-soft:#fdeef4;--pink-deep:#c94f80;--blue:#2f5bea;--blue-deep:#2447c4;--ink:#1f2433;--muted:#5d6577;--line:#e7e9f0;--bg:#fff;--bg-alt:#f7f8fc;--radius:16px;--shadow:0 8px 30px rgba(31,36,51,.08)}
+@media (prefers-color-scheme: dark){:root{--ink:#eef0f6;--muted:#a6adbf;--line:#2b3145;--bg:#12141c;--bg-alt:#181b26;--pink-soft:#2a1d25;--shadow:0 8px 30px rgba(0,0,0,.4)}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;font-size:17px}
+img{max-width:100%}a{color:var(--blue)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.25rem;color:var(--ink);text-decoration:none}
+.brand img{width:38px;height:38px;border-radius:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;font-weight:700;text-decoration:none;background:var(--blue);color:#fff}
+.top{background:linear-gradient(180deg,var(--pink-soft),var(--bg));padding:46px 0 24px;text-align:center}
+.top h1{font-size:clamp(1.8rem,4vw,2.6rem);margin:0 0 8px}
+.top p{color:var(--muted);max-width:640px;margin:0 auto}
+.tools{padding:20px 0 70px}
+.bar{display:flex;flex-direction:column;gap:14px;margin-bottom:26px}
+#q{width:100%;padding:14px 18px;border-radius:999px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font-size:1rem}
+#q:focus{outline:none;border-color:var(--pink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 14px;border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer}
+.chip.on{background:var(--pink);border-color:var(--pink);color:#fff}
+.chip small{opacity:.75;font-weight:600}
+#empty{display:none;text-align:center;color:var(--muted);padding:40px 0}
+.note{color:var(--muted);font-size:.9rem;text-align:center;margin-top:26px}
+footer{background:#161927;color:#b9bfd1;padding:30px 0;font-size:.9rem;text-align:center}
+
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.tcard{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.tcard img{width:100%;aspect-ratio:768/403;object-fit:cover;display:block;background:#0b1220}
+.tbody{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.tcat{font-size:.74rem;font-weight:800;letter-spacing:.03em;color:var(--pink-deep);text-transform:uppercase}
+.tcard h3{font-size:1.02rem;margin:0}
+.tcard p{margin:0;color:var(--muted);font-size:.9rem;flex:1}
+.tbtns{display:flex;gap:8px;margin-top:6px}
+.tbtns a{flex:1;text-align:center;padding:9px 10px;border-radius:999px;font-weight:700;font-size:.9rem;text-decoration:none;border:2px solid var(--blue)}
+.tbtns a.go{background:var(--blue);color:#fff}
+.tbtns a.dl{color:var(--blue);background:transparent}
+.tbtns a:hover{opacity:.9}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+  <a class="brand" href="index.html"><img src="assets/logo.png" alt="Logo Peqqa"> Peqqa Soft</a>
+  <a class="btn" href="index.html#tai-ve">Tải phần mềm</a>
+</div></header>
+<section class="top"><div class="wrap">
+  <h1>Công cụ miễn phí</h1>
+  <p>Bộ công cụ cho kế toán, thuế, nhân sự và bán hàng. Bấm “Dùng ngay” để mở trên trình duyệt, hoặc “Tải về” để lưu về máy.</p>
+</div></section>
+<section class="tools"><div class="wrap">
+  <div class="bar">
+    <input id="q" type="search" placeholder="Tìm công cụ… (ví dụ: lương, thuế, kho)" autocomplete="off">
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="tgrid" id="grid"></div>
+  <div id="empty">Không tìm thấy công cụ phù hợp.</div>
+  <p class="note">Công cụ chỉ hỗ trợ tính toán, tham khảo; hãy đối chiếu kết quả với quy định hiện hành trước khi sử dụng.</p>
+</div></section>
+<footer><div class="wrap">© <span id="y"></span> Peqqa Soft · <a href="index.html" style="color:#e8a5c0">Về trang chủ</a></div></footer>
+<script src="cong-cu/danh-sach.js"></script>
+<script>
+document.getElementById('y').textContent=new Date().getFullYear();
+const T=window.TOOLS||[],C=window.TOOL_CATS||{};
+const grid=document.getElementById('grid'),chips=document.getElementById('chips'),q=document.getElementById('q'),empty=document.getElementById('empty');
+let cat='all';
+const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function card(t){return `<article class="tcard"><a href="cong-cu/${t.f}" target="_blank" rel="noopener"><img loading="lazy" src="cong-cu/anh/${t.i}" alt="${esc(t.t)}"></a><div class="tbody"><span class="tcat">${esc(C[t.c]||'')}</span><h3>${esc(t.t)}</h3><p>${esc(t.d)}</p><div class="tbtns"><a class="go" href="cong-cu/${t.f}" target="_blank" rel="noopener">Dùng ngay</a><a class="dl" href="cong-cu/${t.f}" download>Tải về</a></div></div></article>`}
+function render(){
+  const k=norm(q.value.trim());
+  const list=T.filter(t=>(cat==='all'||t.c===cat)&&(!k||norm(t.t+' '+t.d).includes(k)));
+  grid.innerHTML=list.map(card).join('');
+  empty.style.display=list.length?'none':'block';
+}
+function buildChips(){
+  const cnt={};T.forEach(t=>cnt[t.c]=(cnt[t.c]||0)+1);
+  const items=[['all','Tất cả',T.length],...Object.keys(C).map(k=>[k,C[k],cnt[k]||0])];
+  chips.innerHTML=items.map(([k,n,c])=>`<button type="button" class="chip${k===cat?' on':''}" data-c="${k}">${esc(n)} <small>${c}</small></button>`).join('');
+  chips.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{cat=b.dataset.c;buildChips();render();}));
+}
+q.addEventListener('input',render);
+const h=location.hash.replace('#','');if(C[h])cat=h;
+buildChips();render();
+</script>
+</body>
+</html>

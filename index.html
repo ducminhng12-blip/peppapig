@@ -141,6 +141,19 @@ footer .copy{text-align:center;opacity:.8}
 .qrprice{font-size:1.6rem;font-weight:800;color:var(--pink-deep);margin-bottom:10px}
 .qrcard img{width:100%;max-width:280px;margin:0 auto 10px;border-radius:10px;border:1px solid var(--line);background:#fff}
 #qrclose{position:absolute;top:8px;right:12px;border:0;background:none;font-size:1.8rem;color:var(--muted);cursor:pointer;line-height:1}
+
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.tcard{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.tcard img{width:100%;aspect-ratio:768/403;object-fit:cover;display:block;background:#0b1220}
+.tbody{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.tcat{font-size:.74rem;font-weight:800;letter-spacing:.03em;color:var(--pink-deep);text-transform:uppercase}
+.tcard h3{font-size:1.02rem;margin:0}
+.tcard p{margin:0;color:var(--muted);font-size:.9rem;flex:1}
+.tbtns{display:flex;gap:8px;margin-top:6px}
+.tbtns a{flex:1;text-align:center;padding:9px 10px;border-radius:999px;font-weight:700;font-size:.9rem;text-decoration:none;border:2px solid var(--blue)}
+.tbtns a.go{background:var(--blue);color:#fff}
+.tbtns a.dl{color:var(--blue);background:transparent}
+.tbtns a:hover{opacity:.9}
 </style>
 </head>
 <body>
@@ -151,6 +164,7 @@ footer .copy{text-align:center;opacity:.8}
     <ul>
       <li><a href="#tinh-nang">Tính năng</a></li>
       <li><a href="#hinh-anh">Hình ảnh</a></li>
+      <li><a href="#cong-cu">Công cụ miễn phí</a></li>
       <li><a href="#bang-gia">Bảng giá</a></li>
       <li><a href="#tai-ve">Tải về</a></li>
       <li><a href="#hoi-dap">Hỏi đáp</a></li>
@@ -227,8 +241,20 @@ footer .copy{text-align:center;opacity:.8}
   </div>
 </section>
 
+<!-- FREE TOOLS -->
+<section class="alt" id="cong-cu">
+  <div class="wrap">
+    <h2>Công cụ miễn phí</h2>
+    <p class="sub">Tặng bạn bộ công cụ cho kế toán, thuế, nhân sự và bán hàng. Dùng ngay trên trình duyệt hoặc tải về máy, không cần cài đặt.</p>
+    <div class="tgrid" id="free-tools"></div>
+    <div style="text-align:center;margin-top:30px">
+      <a class="btn btn-primary" href="cong-cu-mien-phi.html">Xem tất cả công cụ →</a>
+    </div>
+  </div>
+</section>
+
 <!-- WHY -->
-<section class="alt">
+<section>
   <div class="wrap">
     <h2>Vì sao chọn Peqqa</h2>
     <div style="height:28px"></div>
@@ -403,6 +429,19 @@ document.querySelectorAll('.plan a[data-qr], .qr-open').forEach(a=>a.addEventLis
 document.getElementById('qrclose').addEventListener('click',()=>qb.classList.remove('on'));
 qb.addEventListener('click',e=>{if(e.target===qb)qb.classList.remove('on');});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')qb.classList.remove('on');});
+</script>
+
+<script src="cong-cu/danh-sach.js"></script>
+<script>
+(function(){
+  var T=window.TOOLS||[],C=window.TOOL_CATS||{},box=document.getElementById('free-tools');
+  if(!box||!T.length)return;
+  var pick=['PhanMem_BangKeHoaDonDienTu-nh','PhanMem_TinhThueHoKinhDoanh-nh','PhanMem_SoKeToanHoKinhDoanh-nh','PhanMem_QuyetToanThueTNCN-nh','DoiChieu_VAT_BaNguon','PhanMem_ChamCong_TinhLuong_1Thang-nh'].map(function(k){return 'Peqqa_'+k+'.html'});
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  box.innerHTML=pick.map(function(f){return T.filter(function(t){return t.f===f})[0]}).filter(Boolean).map(function(t){
+    return '<article class="tcard"><a href="cong-cu/'+t.f+'" target="_blank" rel="noopener"><img loading="lazy" src="cong-cu/anh/'+t.i+'" alt="'+esc(t.t)+'"></a><div class="tbody"><span class="tcat">'+esc(C[t.c]||'')+'</span><h3>'+esc(t.t)+'</h3><p>'+esc(t.d)+'</p><div class="tbtns"><a class="go" href="cong-cu/'+t.f+'" target="_blank" rel="noopener">Dùng ngay</a><a class="dl" href="cong-cu/'+t.f+'" download>Tải về</a></div></div></article>';
+  }).join('');
+})();
 </script>
 </body>
 </html>
