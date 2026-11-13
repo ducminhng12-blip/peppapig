@@ -342,5 +342,12 @@ window.TOOLS=[
 "c": "khac",
 "d": "Theo dõi thu chi gia đình."
 }
+{
+"f": "Peqqa_Thue_HKD.html",
+"i": "anh-quan-ly-thu-chi.webp",
+"t": "Thu chi gia đình",
+"c": "khac",
+"d": "Theo dõi thu chi gia đình."
+}
 ];
 window.TOOL_CATS={thue:'Thuế & Hóa đơn',ketoan:'Kế toán & Sổ sách',tien:'Công nợ & Dòng tiền',nhansu:'Nhân sự & Lương',banhang:'Bán hàng, Kho & Sản xuất',khac:'Quản lý khác'};
