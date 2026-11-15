@@ -153,6 +153,8 @@ footer .copy{text-align:center;opacity:.8}
 .tbtns a{flex:1;text-align:center;padding:9px 10px;border-radius:999px;font-weight:700;font-size:.9rem;text-decoration:none;border:2px solid var(--blue)}
 .tbtns a.go{background:var(--blue);color:#fff}
 .tbtns a.dl{color:var(--blue);background:transparent}
+.tbtns a{display:flex;align-items:center;justify-content:center}
+.tbtns a.guide{flex:1.7}
 .tbtns a:hover{opacity:.9}
 </style>
 </head>
@@ -437,9 +439,14 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')qb.classList.remove(
   var T=window.TOOLS||[],C=window.TOOL_CATS||{},box=document.getElementById('free-tools');
   if(!box||!T.length)return;
   var pick=['PhanMem_BangKeHoaDonDienTu-nh','PhanMem_TinhThueHoKinhDoanh-nh','PhanMem_SoKeToanHoKinhDoanh-nh','PhanMem_QuyetToanThueTNCN-nh','DoiChieu_VAT_BaNguon','PhanMem_ChamCong_TinhLuong_1Thang-nh'].map(function(k){return 'Peqqa_'+k+'.html'});
+  pick.unshift('Peqqa_GiaiCaptcha_Thue');
   function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   box.innerHTML=pick.map(function(f){return T.filter(function(t){return t.f===f})[0]}).filter(Boolean).map(function(t){
-    return '<article class="tcard"><a href="cong-cu/'+t.f+'" target="_blank" rel="noopener"><img loading="lazy" src="cong-cu/anh/'+t.i+'" alt="'+esc(t.t)+'"></a><div class="tbody"><span class="tcat">'+esc(C[t.c]||'')+'</span><h3>'+esc(t.t)+'</h3><p>'+esc(t.d)+'</p><div class="tbtns"><a class="go" href="cong-cu/'+t.f+'" target="_blank" rel="noopener">Dùng ngay</a><a class="dl" href="cong-cu/'+t.f+'" download>Tải về</a></div></div></article>';
+    var ext=!!t.dl, main=ext?(t.v||t.dl):'cong-cu/'+t.f;
+    var btns=ext
+      ?(t.v?'<a class="go guide" href="'+t.v+'" target="_blank" rel="noopener">Hướng dẫn cài đặt</a>':'')+'<a class="dl" href="'+t.dl+'" target="_blank" rel="noopener">Tải về</a>'
+      :'<a class="go" href="cong-cu/'+t.f+'" target="_blank" rel="noopener">Dùng ngay</a><a class="dl" href="cong-cu/'+t.f+'" download>Tải về</a>';
+    return '<article class="tcard"><a href="'+main+'" target="_blank" rel="noopener"><img loading="lazy" src="cong-cu/anh/'+t.i+'" alt="'+esc(t.t)+'"></a><div class="tbody"><span class="tcat">'+esc(C[t.c]||'')+'</span><h3>'+esc(t.t)+'</h3><p>'+esc(t.d)+'</p><div class="tbtns">'+btns+'</div></div></article>';
   }).join('');
 })();
 </script>
