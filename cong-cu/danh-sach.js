@@ -1,5 +1,14 @@
 window.TOOLS=[
 {
+"f": "Peqqa_GiaiCaptcha_Thue",
+"i": "giai-captcha-thue.webp",
+"t": "Giải Captcha Thuế",
+"c": "thue",
+"d": "Tự động điền mã captcha khi đăng nhập các cổng thuế. Nhận dạng AI trực tiếp trên máy tính cá nhân, không gửi dữ liệu ra ngoài Internet.",
+"dl": "https://github.com/ducminhng12-blip/peppapig/releases/download/giaicaptcha/giaicaptcha1.rar",
+"v": "https://www.youtube.com/shorts/8UslmsWnrj0"
+},
+{
 "f": "Peqqa_PhanMem_BangKeHoaDonDienTu-nh.html",
 "i": "hoa-don-dien-tu.webp",
 "t": "Bảng kê hóa đơn điện tử",
