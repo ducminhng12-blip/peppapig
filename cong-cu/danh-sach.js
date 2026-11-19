@@ -1,4 +1,4 @@
-window.TOOLS=[
+window.TOOLS=[  
 {
 "f": "Peqqa_GiaiCaptcha_Thue",
 "i": "giai-captcha-thue.webp",
@@ -7,6 +7,13 @@ window.TOOLS=[
 "d": "Tự động điền mã captcha khi đăng nhập các cổng thuế. Nhận dạng AI trực tiếp trên máy tính cá nhân, không gửi dữ liệu ra ngoài Internet.",
 "dl": "https://github.com/ducminhng12-blip/peppapig/releases/download/giaicaptcha/giaicaptcha1.rar",
 "v": "https://www.youtube.com/shorts/8UslmsWnrj0"
+},
+{
+"f": "Peqqa_PhanMem_ThueNhaThau.html",
+"i": "thue-nha-thau.webp",
+"t": "Theo dõi thuế nhà thầu",
+"c": "thue",
+"d": "Theo dõi thuế nhà thầu, bảng thuế suất thuế nhà thầu - xác định có phải nộp thuế nhà thầu hay không."
 },
 {
 "f": "Peqqa_PhanMem_BangKeHoaDonDienTu-nh.html",
